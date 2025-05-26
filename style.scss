@@ -121,9 +121,9 @@ window.Bar {
                 }
 
                 slider {
-                    box-shadow: none;
-                    outline: unset;
-                    background-color: transparent;
+                    border: none;
+                    outline: none;
+                    background: none;
                 }
             }
         }
