@@ -1,0 +1,216 @@
+// https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
+$fg-color: #c01818;
+$bg-color-dark: #100000;
+$bg-color: #301010;
+$bg-color-light: #801010;
+$bg-color-popover: #301010;
+$accent: #f03030;
+$text: #bbbbbb;
+$text-disabled: #444444;
+
+* {
+    font-family: 'figtree';
+}
+
+window.Bar {
+    background: transparent;
+    color: $fg-color;
+    // font-weight: bold;
+    font-size: 16px;
+
+    >centerbox {
+        background: transparent;
+        margin-top: 8px;
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+
+    menubutton,
+    button {
+        background-color: $bg-color;
+        color: $text;
+        border-radius: 8px;
+    }
+
+    .applauncher {
+        background-color: $bg-color;
+    }
+
+    .workspace-button {
+        &.occupied {
+            background-color: $bg-color-light;
+        }
+
+        &.active {
+            background-color: $fg-color;
+
+            .workspace-button-box label {
+                margin-left: 8px;
+                font-size: 16px;
+            }
+        }
+
+        background-color: $bg-color;
+
+        .workspace-button-box image {
+            padding-left: 3px;
+        }
+
+        .workspace-button-box label {
+            margin-left: 0px;
+            font-size: 0px;
+            transition: all 0.25s ease;
+        }
+    }
+
+    .state-button {
+        background-color: $bg-color;
+    }
+
+    popover {
+        font-size: 16px;
+        margin-right: 8px;
+        margin-left: 8px;
+        border-color: $accent;
+        border-width: 8px;
+
+
+        arrow {
+            background: transparent;
+        }
+
+        contents {
+            background-color: $bg-color-popover;
+            border-style: solid;
+            border-color: $accent;
+            border-width: 2px;
+            color: $text;
+        }
+
+        button {
+            font-weight: normal;
+        }
+
+        button:hover {
+            background-color: $bg-color-light
+        }
+
+        label {
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+
+        .elem {
+            font-size: 16px;
+        }
+
+        scale {
+            margin-right: 8px;
+            margin-left: 8px;
+            padding-left: 0px;
+            padding-right: 0px;
+
+            trough {
+                border-radius: 16px;
+                background-color: $bg-color-dark;
+
+                highlight {
+                    background-color: $accent;
+                    min-height: 24px;
+                    border-radius: 8px;
+                }
+
+                slider {
+                    box-shadow: none;
+                    outline: unset;
+                    background-color: transparent;
+                }
+            }
+        }
+
+        separator {
+            margin-left: 8px;
+            margin-right: 8px;
+            background-color: transparent;
+            border-top: 2px $accent solid;
+        }
+
+    }
+}
+
+window.NotificationPopup {
+    .notification-container {
+        &.critical {
+            background-color: $accent;
+        }
+
+        .header {
+            margin-left: 12px;
+            margin-right: 12px;
+            font-size: 24px;
+
+            separator {
+                min-width: 50px;
+                margin-left: 8px;
+                margin-right: 8px;
+                background-color: transparent;
+                border-top: 2px $accent solid;
+            }
+        }
+
+        .content {
+            .summary {
+                margin-left: 8px;
+                margin-right: 8px;
+            }
+
+            .body {
+                margin-left: 8px;
+                margin-right: 8px;
+                margin-bottom: 8px;
+                font-weight: 400;
+            }
+
+            .image image {
+                min-width: 60px;
+                min-height: 60px;
+                background-size: cover;
+                background-position: center;
+            }
+
+            margin-left: 16px;
+            margin-right: 16px;
+            font-size: 18px;
+        }
+
+        .actions {
+            margin: 8px;
+        }
+
+        // background-color: transparent;
+        background-color: $bg-color;
+        border-radius: 8px;
+        border-style: solid;
+        border-color: $accent;
+        border-width: 2px;
+    }
+
+    background-color: transparent;
+    margin-right: 8px;
+    margin-left: 8px;
+    margin-top: 8px;
+}
+
+
+.active {
+    color: $fg-color;
+    border-color: $accent;
+}
+
+.title {
+    padding: 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: bolder;
+}
