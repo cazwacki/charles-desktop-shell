@@ -3,8 +3,9 @@ import Bluetooth from "gi://AstalBluetooth";
 import Volume from "./Volume"
 import Network from "gi://AstalNetwork";
 
-import { bind, execAsync } from "astal";
-import { Gtk } from "astal/gtk4";
+import { execAsync } from "ags/process";
+import { createBinding, With } from "ags";
+import { Gtk } from "ags/gtk4";
 
 const network = Network.get_default()
 const bluetooth = Bluetooth.get_default()
@@ -51,9 +52,10 @@ function PrimaryNetwork() {
 }
 
 function BluetoothImage() {
-    return bind(bluetooth, "isPowered").as((isPowered) => {
-        return <image iconName={isPowered ? 'bluetooth-active-symbolic' : 'bluetooth-disabled-symbolic'} />
-    })
+    const isPowered = createBinding(bluetooth, "isPowered");
+    return <With value={isPowered}>
+        {(isPowered) => <image iconName={isPowered ? 'bluetooth-active-symbolic' : 'bluetooth-disabled-symbolic'} />}
+    </With>
 }
 
 export default function State() {
@@ -61,8 +63,8 @@ export default function State() {
     popover.child = <box orientation={1}>
         <box marginTop={8} hexpand halign={Gtk.Align.BASELINE_CENTER}>
             <BatteryImage />
-            <label label={bind(battery, 'batteryLevel').as((batteryLevel) => `${Math.floor(batteryLevel * 100)}%`)} />
-            <label label={bind(battery, 'charging').as((charging) => charging ? (battery.batteryLevel === 1 ? 'fully charged.' : `${Math.floor(battery.timeToFull / 60)} mins. to full`) : `${Math.floor(battery.timeToEmpty / 60)} mins. remain`)} />
+            <label label={createBinding(battery, 'batteryLevel').as((batteryLevel) => `${Math.floor(batteryLevel * 100)}%`)} />
+            <label label={createBinding(battery, 'charging').as((charging) => charging ? (battery.batteryLevel === 1 ? 'fully charged.' : `${Math.floor(battery.timeToFull / 60)} mins. to full`) : `${Math.floor(battery.timeToEmpty / 60)} mins. remain`)} />
         </box>
         <box>
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />

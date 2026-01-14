@@ -1,46 +1,43 @@
-import { Gtk } from "astal/gtk4";
+import { Gtk } from "ags/gtk4";
 import AstalHyprland from "gi://AstalHyprland";
-import { bind } from "astal";
-import { Variable } from "astal";
-import { ButtonProps } from "astal/gtk4/widget";
-
-type WsButtonProps = ButtonProps & {
-  ws: AstalHyprland.Workspace;
-  symbol: string;
-  label: string;
-};
-
-const hyprland = AstalHyprland.get_default();
+import { createBinding, createComputed, With } from "gnim";
 
 function WorkspaceButton({ ws, symbol, label, ...props }: WsButtonProps) {
-  const classNames = Variable.derive(
-    [bind(hyprland, "focusedWorkspace"), bind(hyprland, "clients")],
-    (fws, _) => {
-      const classes = ["workspace-button"];
-
-      const active = fws.id == ws.id;
-      active && classes.push("active");
-
-      const occupied = hyprland.get_workspace(ws.id)?.get_clients().length > 0;
-      occupied && classes.push("occupied");
-      return classes;
-    },
-  );
+  const workspaceState = createComputed(() => {
+    const hyprland = AstalHyprland.get_default();
+    const focusedWorkspace = createBinding(hyprland, "focusedWorkspace");
+    const clients = createBinding(ws, "clients");
+  
+    if (focusedWorkspace().id === ws.id) {
+      return "active";
+    } else if (clients().length > 0) {
+      return "occupied";
+    } else {
+      return "";
+    }
+  });
 
   return (
-    <button
-      cssClasses={classNames()}
-      onDestroy={() => classNames.drop()}
-      valign={Gtk.Align.CENTER}
-      halign={Gtk.Align.CENTER}
-      onClicked={() => ws.focus()}
-      {...props}
-    >
-      <box cssClasses={["workspace-button-box"]}>
-        <image iconName={symbol} />
-        <label label={label} />
-      </box>
-    </button>
+    <box>
+      <With value={workspaceState}>
+        {(value) =><button
+          cssClasses={[
+            "workspace-button",
+            value,
+          ]}
+          valign={Gtk.Align.CENTER}
+          halign={Gtk.Align.CENTER}
+          onClicked={() => ws.focus()}
+          {...props}
+        >
+          <box cssClasses={["workspace-button-box"]}>
+            <image iconName={symbol} />
+            <label label={label} />
+          </box>
+        </button>
+        }
+      </With>
+    </box>
   );
 }
 

@@ -1,13 +1,14 @@
-import { Gtk } from "astal/gtk4";
-import { GLib } from "astal";
+import { Gdk, Gtk } from "ags/gtk4";
+import GLib from "gi://GLib?version=2.0";
 import Pango from "gi://Pango";
 import AstalNotifd from "gi://AstalNotifd";
 
-const time = (time: number, format = "%H:%M") =>
-  GLib.DateTime.new_from_unix_local(time).format(format);
+const time = (time: number, format = "%H:%M") => {
+  return GLib.DateTime.new_from_unix_local(time).format(format);
+};
 
 const isIcon = (icon: string) => {
-  const iconTheme = new Gtk.IconTheme();
+  const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default());
   return iconTheme.has_icon(icon);
 };
 

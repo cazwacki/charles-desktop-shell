@@ -1,18 +1,25 @@
 import Wp from "gi://AstalWp"
 
-import { bind } from "astal";
-import { execAsync } from "astal/process"
-import { Gtk } from "astal/gtk4";
+import { createBinding, For, With } from "ags";
+import { execAsync } from "ags/process"
+import { Gtk } from "ags/gtk4";
 
 
 export default function Volume() {
     const wp = Wp.get_default()
+
+    const microphones = createBinding(wp.audio, 'microphones')
+    const speakers = createBinding(wp.audio, 'speakers');
+    const streams = createBinding(wp.audio, 'streams');
 
     if (!wp) {
         return <box />
     }
 
     const speaker = wp.audio.defaultSpeaker;
+    const volumeIcon = createBinding(speaker, "volumeIcon");
+    const volume = createBinding(speaker, "volume");
+
     const popover = new Gtk.Popover();
     popover.child = <box orientation={1}>
         <box>
@@ -20,63 +27,88 @@ export default function Volume() {
             <label cssClasses={["title"]} label="input." />
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
         </box>
-        {bind(wp.audio, 'microphones').as((microphones) => {
-            return microphones.map((microphone) =>
-                <button cssClasses={["elem"]} onClicked={() => microphone.set_is_default(true)}>
-                    <box spacing={8}>
-                        <image iconName={bind(microphone, 'isDefault').as((isDefault) => isDefault ? 'audio-input-microphone' : '')} />
-                        <label label={bind(microphone, 'description')} ellipsize={3} maxWidthChars={30} />
-                    </box>
-                </button>
-            )
-        })}
+            <For each={microphones}>
+                {
+                    (microphone) => {
+                        const isDefault = createBinding(microphone, 'isDefault');
+                        const description = createBinding(microphone, 'description');
+
+                        return <button cssClasses={["elem"]} onClicked={() => microphone.set_is_default(true)}>
+                            <box spacing={8}>
+                                <With value={isDefault}>
+                                    {(value) => <image iconName={value ? 'audio-input-microphone' : ''} />}
+                                </With>
+                                <With value={description}>
+                                    {(value) => <label label={value} ellipsize={3} maxWidthChars={30} />}
+                                </With>
+                            </box>
+                        </button>
+                    }
+                }
+            </For>
         <box>
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
             <label cssClasses={["title"]} label="output." />
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
         </box>
-        {bind(wp.audio, 'speakers').as((speakers) => {
-            return speakers.map((speaker) =>
-                <button cssClasses={["elem"]} onClicked={() => speaker.set_is_default(true)}>
-                    <box spacing={8}>
-                        <image iconName={bind(speaker, 'isDefault').as((isDefault) => isDefault ? 'audio-volume-high' : '')} />
-                        <label label={bind(speaker, 'description')} ellipsize={3} maxWidthChars={30} />
-                    </box>
-                </button>
-            );
-        })}
+        <For each={speakers}>
+            {
+                (speaker) => {
+                    const isDefault = createBinding(speaker, 'isDefault');
+                    const description = createBinding(speaker, 'description');
+
+                    return <button cssClasses={["elem"]} onClicked={() => speaker.set_is_default(true)}>
+                        <box spacing={8}>
+                            <With value={isDefault}>
+                                {(value) => <image iconName={value ? 'audio-volume-high' : ''} />}
+                            </With>
+                            <With value={description}>
+                                {(value) => <label label={value} ellipsize={3} maxWidthChars={30} />}
+                            </With>
+                        </box>
+                    </button>
+
+                }
+            }
+        </For>
         <box cssClasses={["elem"]}>
             <slider
                 onChangeValue={(self) => {
                     speaker.volume = self.value;
                 }}
-                value={bind(speaker, "volume")}
+                value={volume}
                 hexpand
             />
-            <label label={bind(speaker, 'volume').as((volume) => `${Math.floor(volume * 100)}%`)} widthChars={4} />
+            <label label={volume.as((volume) => `${Math.floor(volume * 100)}%`)} widthChars={4} />
         </box>
         <box>
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
             <label cssClasses={["title"]} label="playback." />
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
         </box>
-        {bind(wp.audio, 'streams').as((streams) =>
-            streams.map((stream) =>
-                <box cssClasses={["elem"]} orientation={1}>
-                    <label label={`${stream.description} - ${stream.name}`} ellipsize={3} maxWidthChars={30} />
-                    <box>
-                        <slider
-                            onChangeValue={(self) => {
-                                stream.volume = self.value;
-                            }}
-                            value={bind(stream, "volume")}
-                            hexpand
-                        />
-                        <label label={bind(stream, 'volume').as((volume) => `${Math.floor(volume * 100)}%`)} widthChars={4} />
+        <For each={streams}>
+            {
+                (stream) => {
+                    const volume = createBinding(stream, "volume");
+                    const description = createBinding(stream, 'description');
+                    const name = createBinding(stream, 'name');
+
+                    return <box cssClasses={["elem"]} orientation={1}>
+                        <label label={`${description()} - ${name()}`} ellipsize={3} maxWidthChars={30} />
+                        <box>
+                            <slider
+                                onChangeValue={(self) => {
+                                    stream.volume = self.value;
+                                }}
+                                value={volume}
+                                hexpand
+                            />
+                            <label label={`${Math.floor(volume() * 100)}%`} widthChars={4} />
+                        </box>
                     </box>
-                </box>
-            )
-        )}
+                }
+            }
+        </For>
         <button cssClasses={["popover-app-launcher"]} onClicked={() => {
             execAsync("pwvucontrol")
             popover.popdown()
@@ -90,8 +122,12 @@ export default function Volume() {
 
     return <menubutton cssClasses={["state-button"]}>
         <box spacing={5}>
-            <image iconName={bind(speaker, "volumeIcon")} />
-            <label label={bind(speaker, 'volume').as((volume) => `${Math.floor(volume * 100)}%`)} />
+            <With value={volumeIcon}>
+                {(value) => <image iconName={value} />}
+            </With>
+            <With value={volume}>
+                {(value) => <label label={`${Math.floor(value * 100)}%`} />}
+            </With>
         </box>
         {popover}
     </menubutton>
