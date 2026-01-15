@@ -27,6 +27,7 @@ export default function Volume() {
             <label cssClasses={["title"]} label="input." />
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
         </box>
+        <Gtk.ListBox>
             <For each={microphones}>
                 {
                     (microphone) => {
@@ -46,31 +47,34 @@ export default function Volume() {
                     }
                 }
             </For>
+        </Gtk.ListBox>
         <box>
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
             <label cssClasses={["title"]} label="output." />
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
         </box>
-        <For each={speakers}>
-            {
-                (speaker) => {
-                    const isDefault = createBinding(speaker, 'isDefault');
-                    const description = createBinding(speaker, 'description');
+        <Gtk.ListBox>
+            <For each={speakers}>
+                {
+                    (speaker) => {
+                        const isDefault = createBinding(speaker, 'isDefault');
+                        const description = createBinding(speaker, 'description');
 
-                    return <button cssClasses={["elem"]} onClicked={() => speaker.set_is_default(true)}>
-                        <box spacing={8}>
-                            <With value={isDefault}>
-                                {(value) => <image iconName={value ? 'audio-volume-high' : ''} />}
-                            </With>
-                            <With value={description}>
-                                {(value) => <label label={value} ellipsize={3} maxWidthChars={30} />}
-                            </With>
-                        </box>
-                    </button>
+                        return <button cssClasses={["elem"]} onClicked={() => speaker.set_is_default(true)}>
+                            <box spacing={8}>
+                                <With value={isDefault}>
+                                    {(value) => <image iconName={value ? 'audio-volume-high' : ''} />}
+                                </With>
+                                <With value={description}>
+                                    {(value) => <label label={value} ellipsize={3} maxWidthChars={30} />}
+                                </With>
+                            </box>
+                        </button>
 
+                    }
                 }
-            }
-        </For>
+            </For>
+        </Gtk.ListBox>
         <box cssClasses={["elem"]}>
             <slider
                 onChangeValue={(self) => {
