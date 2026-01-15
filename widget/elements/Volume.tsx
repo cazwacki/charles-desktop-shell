@@ -1,6 +1,6 @@
 import Wp from "gi://AstalWp"
 
-import { createBinding, For, With } from "ags";
+import { createBinding, createComputed, For, With } from "ags";
 import { execAsync } from "ags/process"
 import { Gtk } from "ags/gtk4";
 
@@ -98,29 +98,41 @@ export default function Volume() {
             <label cssClasses={["title"]} label="playback." />
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
         </box>
-        <For each={streams}>
-            {
-                (stream) => {
-                    const volume = createBinding(stream, "volume");
-                    const description = createBinding(stream, 'description');
-                    const name = createBinding(stream, 'name');
+        <box orientation={Gtk.Orientation.VERTICAL}>
+            <For each={streams}>
+                {
+                    (stream) => {
+                        const volume = createBinding(stream, "volume");
+                        const description = createBinding(stream, 'description');
+                        const name = createBinding(stream, 'name');
+                        const streamTitle = createComputed(() => {
+                            return `${description()} - ${name()}`;
+                        });
 
-                    return <box cssClasses={["elem"]} orientation={1}>
-                        <label label={`${description()} - ${name()}`} ellipsize={3} maxWidthChars={30} />
-                        <box>
-                            <slider
-                                onChangeValue={(self) => {
-                                    stream.volume = self.value;
-                                }}
-                                value={volume}
-                                hexpand
-                            />
-                            <label label={`${Math.floor(volume() * 100)}%`} widthChars={4} />
+                        return <box cssClasses={["elem"]} orientation={1}>
+                            <box>
+                                <With value={streamTitle}>
+                                    {(value) => <label label={value} ellipsize={3} maxWidthChars={30} />}
+                                </With>
+                            </box>
+                            <box>
+                                <slider
+                                    onChangeValue={(self) => {
+                                        stream.volume = self.value;
+                                    }}
+                                    value={volume}
+                                    hexpand
+                                />
+                                <With value={volume}>
+                                    {(value) => <label label={`${Math.floor(value * 100)}%`} widthChars={4} />}
+                                </With>
+
+                            </box>
                         </box>
-                    </box>
+                    }
                 }
-            }
-        </For>
+            </For>
+        </box>
         <button cssClasses={["popover-app-launcher"]} onClicked={() => {
             execAsync("pwvucontrol")
             popover.popdown()
