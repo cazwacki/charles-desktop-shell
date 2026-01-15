@@ -27,7 +27,7 @@ export default function Volume() {
             <label cssClasses={["title"]} label="input." />
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
         </box>
-        <Gtk.ListBox>
+        <box orientation={Gtk.Orientation.VERTICAL}>
             <For each={microphones}>
                 {
                     (microphone) => {
@@ -36,24 +36,28 @@ export default function Volume() {
 
                         return <button cssClasses={["elem"]} onClicked={() => microphone.set_is_default(true)}>
                             <box spacing={8}>
-                                <With value={isDefault}>
-                                    {(value) => <image iconName={value ? 'audio-input-microphone' : ''} />}
-                                </With>
-                                <With value={description}>
-                                    {(value) => <label label={value} ellipsize={3} maxWidthChars={30} />}
-                                </With>
+                                <box>
+                                    <With value={isDefault}>
+                                        {(value) => <image iconName={value ? 'audio-input-microphone' : ''} />}
+                                    </With>
+                                </box>
+                                <box>
+                                    <With value={description}>
+                                        {(value) => <label label={value} ellipsize={3} maxWidthChars={30} />}
+                                    </With>
+                                </box>
                             </box>
                         </button>
                     }
                 }
             </For>
-        </Gtk.ListBox>
+        </box>
         <box>
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
             <label cssClasses={["title"]} label="output." />
             <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
         </box>
-        <Gtk.ListBox>
+        <box orientation={Gtk.Orientation.VERTICAL}>
             <For each={speakers}>
                 {
                     (speaker) => {
@@ -62,19 +66,23 @@ export default function Volume() {
 
                         return <button cssClasses={["elem"]} onClicked={() => speaker.set_is_default(true)}>
                             <box spacing={8}>
-                                <With value={isDefault}>
-                                    {(value) => <image iconName={value ? 'audio-volume-high' : ''} />}
-                                </With>
-                                <With value={description}>
-                                    {(value) => <label label={value} ellipsize={3} maxWidthChars={30} />}
-                                </With>
+                                <box>
+                                    <With value={isDefault}>
+                                        {(value) => <image iconName={value ? 'audio-volume-high' : ''} />}
+                                    </With>
+                                </box>
+                                <box>
+                                    <With value={description}>
+                                        {(value) => <label label={value} ellipsize={3} maxWidthChars={30} />}
+                                    </With>
+                                </box>
                             </box>
                         </button>
 
                     }
                 }
             </For>
-        </Gtk.ListBox>
+        </box>
         <box cssClasses={["elem"]}>
             <slider
                 onChangeValue={(self) => {
