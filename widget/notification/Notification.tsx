@@ -43,7 +43,7 @@ export default function Notification({
       hexpand={false}
       vexpand={true}
     >
-      <box vertical>
+      <box orientation={Gtk.Orientation.VERTICAL}>
         <box vexpand hexpand cssClasses={["header"]}>
           <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
           <label cssClasses={["title"]} label={`${n.appName.toLowerCase() || "unknown"}. `} />
@@ -65,7 +65,7 @@ export default function Notification({
               />
             </box>
           )}
-          <box hexpand vertical>
+          <box hexpand orientation={Gtk.Orientation.VERTICAL}>
             <label
               ellipsize={Pango.EllipsizeMode.END}
               maxWidthChars={30}
@@ -89,7 +89,7 @@ export default function Notification({
           </box>
         </box>
         {showActions && (
-          <box vertical cssClasses={["actions"]} spacing={6}>
+          <box orientation={Gtk.Orientation.VERTICAL} cssClasses={["actions"]} spacing={6}>
             <button hexpand onClicked={() => n.dismiss()}>
               <label label="dismiss." />
             </button>

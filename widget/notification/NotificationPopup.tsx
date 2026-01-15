@@ -16,7 +16,6 @@ export const sendBatch = (batch: string[]) => {
 };
 
 export default function NotificationPopup(gdkmonitor: Gdk.Monitor) {
-
   const notifd = AstalNotifd.get_default()
 
   const [notifications, setNotifications] = createState(
@@ -26,14 +25,18 @@ export default function NotificationPopup(gdkmonitor: Gdk.Monitor) {
   const notifiedHandler = notifd.connect("notified", (_, id, replaced) => {
     const notification = notifd.get_notification(id)
 
+    if (!notification) return
+
     if (replaced && notifications.peek().some((n) => n.id === id)) {
       setNotifications((ns) => ns.map((n) => (n.id === id ? notification : n)))
     } else {
+      console.log("New notification:", notification.appName, notification.summary)
       setNotifications((ns) => [notification, ...ns])
     }
   })
 
   const resolvedHandler = notifd.connect("resolved", (_, id) => {
+    console.log("Resolved notification:", id)
     setNotifications((ns) => ns.filter((n) => n.id !== id))
   })
 
@@ -48,6 +51,7 @@ export default function NotificationPopup(gdkmonitor: Gdk.Monitor) {
       cssClasses={["NotificationPopup"]}
       namespace={"notification-popup"}
       $={(self) => onCleanup(() => self.destroy())}
+      visible={notifications((ns) => ns.length > 0)}
       gdkmonitor={gdkmonitor}
       anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT}
     >

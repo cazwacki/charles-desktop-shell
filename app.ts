@@ -9,6 +9,6 @@ app.start({
   // gtkTheme: "adw-gtk3-dark",
   main() {
     app.get_monitors().map(Bar)
-    // app.get_monitors().map(NotificationPopup)
+    app.get_monitors().map(NotificationPopup)
   },
 })
