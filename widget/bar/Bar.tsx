@@ -59,7 +59,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <Workspaces buttons={buttons} />
                 </box>
                 <box $type="center">
-                    <button onClicked={() => execAsync(['walker', '-s', 'red-dark'])}>
+                    <button onClicked={() => execAsync(['walker', '-t', 'red-dark'])}>
                         <box>
                             <label label={time} />
                         </box>
