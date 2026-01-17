@@ -1,19 +1,19 @@
-import { Astal, Gdk, Gtk } from "ags/gtk4";
-import AstalNotifd from "gi://AstalNotifd";
-import AstalHyprland from "gi://AstalHyprland";
-import Notification from "./Notification";
-import { createState, For, onCleanup } from "ags";
+import { Astal, Gdk, Gtk } from "ags/gtk4"
+import AstalNotifd from "gi://AstalNotifd"
+import AstalHyprland from "gi://AstalHyprland"
+import Notification from "./Notification"
+import { createState, For, onCleanup } from "ags"
 
-const hyprland = AstalHyprland.get_default();
+const hyprland = AstalHyprland.get_default()
 
 export const sendBatch = (batch: string[]) => {
   const cmd = batch
     .filter((x) => !!x)
     .map((x) => `keyword ${x}`)
-    .join("; ");
+    .join("; ")
 
-  hyprland.message(`[[BATCH]]/${cmd}`);
-};
+  hyprland.message(`[[BATCH]]/${cmd}`)
+}
 
 export default function NotificationPopup(gdkmonitor: Gdk.Monitor) {
   const notifd = AstalNotifd.get_default()
@@ -30,7 +30,11 @@ export default function NotificationPopup(gdkmonitor: Gdk.Monitor) {
     if (replaced && notifications.peek().some((n) => n.id === id)) {
       setNotifications((ns) => ns.map((n) => (n.id === id ? notification : n)))
     } else {
-      console.log("New notification:", notification.appName, notification.summary)
+      console.log(
+        "New notification:",
+        notification.appName,
+        notification.summary,
+      )
       setNotifications((ns) => [notification, ...ns])
     }
   })
@@ -57,9 +61,9 @@ export default function NotificationPopup(gdkmonitor: Gdk.Monitor) {
     >
       <box orientation={Gtk.Orientation.VERTICAL}>
         <For each={notifications}>
-            {(notification) => <Notification n={notification} />}
+          {(notification) => <Notification n={notification} />}
         </For>
       </box>
     </window>
-  );
+  )
 }
