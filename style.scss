@@ -171,10 +171,10 @@ window.NotificationPopup {
                 font-weight: 400;
             }
 
-            .image image {
+            .image {
                 min-width: 60px;
                 min-height: 60px;
-                background-size: cover;
+                background-size: auto;
                 background-position: center;
             }
 

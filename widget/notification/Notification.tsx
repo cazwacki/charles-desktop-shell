@@ -2,6 +2,7 @@ import { Gdk, Gtk } from "ags/gtk4";
 import GLib from "gi://GLib?version=2.0";
 import Pango from "gi://Pango";
 import AstalNotifd from "gi://AstalNotifd";
+import Gio from "gi://Gio?version=2.0";
 
 const time = (time: number, format = "%H:%M") => {
   return GLib.DateTime.new_from_unix_local(time).format(format);
@@ -39,6 +40,10 @@ export default function Notification({
     <box
       name={n.id.toString()}
       cssClasses={["notification-container", urgency(n)]}
+      $={() => GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 5, () => {
+        n.dismiss();
+        return GLib.SOURCE_REMOVE;
+      })}
       halign={Gtk.Align.END}
       hexpand={false}
       vexpand={true}
@@ -52,7 +57,9 @@ export default function Notification({
         <box hexpand cssClasses={["content"]} spacing={8}>
           {n.image && fileExists(n.image) && (
             <box valign={Gtk.Align.START} cssClasses={["image"]}>
-              <image file={n.image} overflow={Gtk.Overflow.HIDDEN} />
+              <overlay heightRequest={60} widthRequest={60}>
+                <Gtk.Picture $type="overlay" canShrink contentFit={Gtk.ContentFit.SCALE_DOWN} file={Gio.File.new_for_path(n.image)}  />
+              </overlay>
             </box>
           )}
           {n.image && isIcon(n.image) && (
