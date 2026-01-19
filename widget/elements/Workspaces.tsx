@@ -18,24 +18,24 @@ function WorkspaceButton({ ws, symbol, label, ...props }: WsButtonProps) {
   })
 
   return (
-    <box>
+    <Gtk.Box>
       <With value={workspaceState}>
         {(value) => (
-          <button
+          <Gtk.Button
             cssClasses={["workspace-button", value]}
             valign={Gtk.Align.CENTER}
             halign={Gtk.Align.CENTER}
             onClicked={() => ws.focus()}
             {...props}
           >
-            <box cssClasses={["workspace-button-box"]}>
-              <image iconName={symbol} />
-              <label label={label} />
-            </box>
-          </button>
+            <Gtk.Box cssClasses={["workspace-button-Gtk.Box"]}>
+              <Gtk.Image iconName={symbol} />
+              <Gtk.Label label={label} />
+            </Gtk.Box>
+          </Gtk.Button>
         )}
       </With>
-    </box>
+    </Gtk.Box>
   )
 }
 
@@ -50,7 +50,7 @@ export default function WorkspacesPanelButton({
   buttons,
 }: WorkspacesPanelButtonProps) {
   return (
-    <box spacing={4}>
+    <Gtk.Box spacing={4}>
       {buttons.map((button, index) => (
         <WorkspaceButton
           ws={AstalHyprland.Workspace.dummy(index + 1, null)}
@@ -58,6 +58,6 @@ export default function WorkspacesPanelButton({
           symbol={button.symbol}
         />
       ))}
-    </box>
+    </Gtk.Box>
   )
 }

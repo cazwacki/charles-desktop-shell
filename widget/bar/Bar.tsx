@@ -1,5 +1,5 @@
 import app from "ags/gtk4/app"
-import { Astal, Gdk } from "ags/gtk4"
+import { Astal, Gdk, Gtk } from "ags/gtk4"
 import { execAsync } from "ags/process"
 import { createPoll } from "ags/time"
 
@@ -44,7 +44,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
   })
 
   return (
-    <window
+    <Astal.Window
       $={(self) => (win = self)}
       visible
       name="bar"
@@ -54,21 +54,21 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       anchor={TOP | LEFT | RIGHT}
       application={app}
     >
-      <centerbox cssName="centerbox">
-        <box $type="start" spacing={8}>
+      <Gtk.CenterBox cssName="Gtk.CenterBox">
+        <Gtk.Box $type="start" spacing={8}>
           <Workspaces buttons={buttons} />
-        </box>
-        <box $type="center">
-          <button onClicked={() => execAsync(["walker", "-t", "red-dark"])}>
-            <box>
-              <label label={time} />
-            </box>
-          </button>
-        </box>
-        <box $type="end">
+        </Gtk.Box>
+        <Gtk.Box $type="center">
+          <Gtk.Button onClicked={() => execAsync(["walker", "-t", "red-dark"])}>
+            <Gtk.Box>
+              <Gtk.Label label={time} />
+            </Gtk.Box>
+          </Gtk.Button>
+        </Gtk.Box>
+        <Gtk.Box $type="end">
           <State />
-        </box>
-      </centerbox>
-    </window>
+        </Gtk.Box>
+      </Gtk.CenterBox>
+    </Astal.Window>
   )
 }

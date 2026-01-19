@@ -59,11 +59,11 @@ export default function NotificationPopup(gdkmonitor: Gdk.Monitor) {
       gdkmonitor={gdkmonitor}
       anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT}
     >
-      <box orientation={Gtk.Orientation.VERTICAL}>
+      <Gtk.Box orientation={Gtk.Orientation.VERTICAL}>
         <For each={notifications}>
           {(notification) => <Notification n={notification} />}
         </For>
-      </box>
+      </Gtk.Box>
     </window>
   )
 }

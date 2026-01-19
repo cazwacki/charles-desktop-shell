@@ -15,7 +15,7 @@ function BatteryImage() {
   const icon_level = Math.floor(battery.percentage * 10) * 10
   let battery_icon = `battery-level-${icon_level}-symbolic`
 
-  return <image iconName={battery_icon} />
+  return <Gtk.Image iconName={battery_icon} />
 }
 
 function NetworkImage() {
@@ -28,7 +28,7 @@ function NetworkImage() {
     case Network.Primary.WIRED:
       network_icon = "network-wired-symbolic"
   }
-  return <image iconName={network_icon} />
+  return <Gtk.Image iconName={network_icon} />
 }
 
 function PrimaryNetwork() {
@@ -46,10 +46,10 @@ function PrimaryNetwork() {
       network_text = network.wired.device.activeConnection.id
   }
   return (
-    <box spacing={8} marginStart={8} marginEnd={8} marginBottom={8}>
-      <image iconName={network_icon} />
-      <label label={network_text} />
-    </box>
+    <Gtk.Box spacing={8} marginStart={8} marginEnd={8} marginBottom={8}>
+      <Gtk.Image iconName={network_icon} />
+      <Gtk.Label label={network_text} />
+    </Gtk.Box>
   )
 }
 
@@ -58,7 +58,7 @@ function BluetoothImage() {
   return (
     <With value={isPowered}>
       {(isPowered) => (
-        <image
+        <Gtk.Image
           iconName={
             isPowered
               ? "bluetooth-active-symbolic"
@@ -73,15 +73,15 @@ function BluetoothImage() {
 export default function State() {
   const popover = new Gtk.Popover()
   popover.child = (
-    <box orientation={1}>
-      <box marginTop={8} hexpand halign={Gtk.Align.BASELINE_CENTER}>
+    <Gtk.Box orientation={1}>
+      <Gtk.Box marginTop={8} hexpand halign={Gtk.Align.BASELINE_CENTER}>
         <BatteryImage />
-        <label
+        <Gtk.Label
           label={createBinding(battery, "batteryLevel").as(
             (batteryLevel) => `${Math.floor(batteryLevel * 100)}%`,
           )}
         />
-        <label
+        <Gtk.Label
           label={createBinding(battery, "charging").as((charging) =>
             charging
               ? battery.batteryLevel === 1
@@ -90,48 +90,48 @@ export default function State() {
               : `${Math.floor(battery.timeToEmpty / 60)} mins. remain`,
           )}
         />
-      </box>
-      <box>
+      </Gtk.Box>
+      <Gtk.Box>
         <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
-        <label cssClasses={["title"]} label="connections." />
+        <Gtk.Label cssClasses={["title"]} label="connections." />
         <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
-      </box>
+      </Gtk.Box>
       <PrimaryNetwork />
-      <button
+      <Gtk.Button
         onClicked={() => {
           execAsync(["iwgtk"])
           popover.popdown()
         }}
       >
-        <box>
-          <image iconName="network-wireless-symbolic" />
-          <label label="Manage Wi-Fi" />
-        </box>
-      </button>
-      <button
+        <Gtk.Box>
+          <Gtk.Image iconName="network-wireless-symbolic" />
+          <Gtk.Label label="Manage Wi-Fi" />
+        </Gtk.Box>
+      </Gtk.Button>
+      <Gtk.Button
         onClicked={() => {
           execAsync(["blueman-manager"])
           popover.popdown()
         }}
       >
-        <box>
-          <image iconName="bluetooth-symbolic" />
-          <label label="Manage Bluetooth" />
-        </box>
-      </button>
-    </box>
+        <Gtk.Box>
+          <Gtk.Image iconName="bluetooth-symbolic" />
+          <Gtk.Label label="Manage Bluetooth" />
+        </Gtk.Box>
+      </Gtk.Button>
+    </Gtk.Box>
   )
   return (
-    <box spacing={5}>
+    <Gtk.Box spacing={5}>
       <Volume />
-      <menubutton cssClasses={["state-button"]}>
-        <box spacing={5}>
+      <Gtk.MenuButton cssClasses={["state-button"]}>
+        <Gtk.Box spacing={5}>
           <NetworkImage />
           <BluetoothImage />
           <BatteryImage />
-        </box>
+        </Gtk.Box>
         {popover}
-      </menubutton>
-    </box>
+      </Gtk.MenuButton>
+    </Gtk.Box>
   )
 }

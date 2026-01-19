@@ -37,7 +37,7 @@ export default function Notification({
   showActions?: boolean
 }) {
   return (
-    <box
+    <Gtk.Box
       name={n.id.toString()}
       cssClasses={["notification-container", urgency(n)]}
       $={() =>
@@ -50,18 +50,18 @@ export default function Notification({
       hexpand={false}
       vexpand={true}
     >
-      <box orientation={Gtk.Orientation.VERTICAL}>
-        <box vexpand hexpand cssClasses={["header"]}>
+      <Gtk.Box orientation={Gtk.Orientation.VERTICAL}>
+        <Gtk.Box vexpand hexpand cssClasses={["header"]}>
           <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
-          <label
+          <Gtk.Label
             cssClasses={["title"]}
             label={`${n.appName.toLowerCase() || "unknown"}. `}
           />
           <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
-        </box>
-        <box hexpand cssClasses={["content"]} spacing={8}>
+        </Gtk.Box>
+        <Gtk.Box hexpand cssClasses={["content"]} spacing={8}>
           {n.image && fileExists(n.image) && (
-            <box valign={Gtk.Align.START} cssClasses={["image"]}>
+            <Gtk.Box valign={Gtk.Align.START} cssClasses={["image"]}>
               <overlay heightRequest={60} widthRequest={60}>
                 <Gtk.Picture
                   $type="overlay"
@@ -70,20 +70,20 @@ export default function Notification({
                   file={Gio.File.new_for_path(n.image)}
                 />
               </overlay>
-            </box>
+            </Gtk.Box>
           )}
           {n.image && isIcon(n.image) && (
-            <box cssClasses={["icon-image"]} valign={Gtk.Align.START}>
-              <image
+            <Gtk.Box cssClasses={["icon-image"]} valign={Gtk.Align.START}>
+              <Gtk.Image
                 iconName={n.image}
                 iconSize={Gtk.IconSize.LARGE}
                 halign={Gtk.Align.CENTER}
                 valign={Gtk.Align.CENTER}
               />
-            </box>
+            </Gtk.Box>
           )}
-          <box hexpand orientation={Gtk.Orientation.VERTICAL}>
-            <label
+          <Gtk.Box hexpand orientation={Gtk.Orientation.VERTICAL}>
+            <Gtk.Label
               ellipsize={Pango.EllipsizeMode.END}
               maxWidthChars={30}
               cssClasses={["summary"]}
@@ -92,7 +92,7 @@ export default function Notification({
               label={n.summary}
             />
             {n.body && (
-              <label
+              <Gtk.Label
                 maxWidthChars={30}
                 lines={3}
                 wrap
@@ -103,29 +103,29 @@ export default function Notification({
                 label={n.body.replace(/\s+/g, " ")}
               />
             )}
-          </box>
-        </box>
+          </Gtk.Box>
+        </Gtk.Box>
         {showActions && (
-          <box
+          <Gtk.Box
             orientation={Gtk.Orientation.VERTICAL}
             cssClasses={["actions"]}
             spacing={6}
           >
-            <button hexpand onClicked={() => n.dismiss()}>
-              <label label="dismiss." />
-            </button>
+            <Gtk.Button hexpand onClicked={() => n.dismiss()}>
+              <Gtk.Label label="dismiss." />
+            </Gtk.Button>
             {n.get_actions().map(({ label, id }) => (
-              <button hexpand onClicked={() => n.invoke(id)}>
-                <label
+              <Gtk.Button hexpand onClicked={() => n.invoke(id)}>
+                <Gtk.Label
                   label={`${label.toLowerCase()}.`}
                   halign={Gtk.Align.CENTER}
                   hexpand
                 />
-              </button>
+              </Gtk.Button>
             ))}
-          </box>
+          </Gtk.Box>
         )}
-      </box>
-    </box>
+      </Gtk.Box>
+    </Gtk.Box>
   )
 }
