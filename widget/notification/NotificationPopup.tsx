@@ -30,17 +30,11 @@ export default function NotificationPopup(gdkmonitor: Gdk.Monitor) {
     if (replaced && notifications.peek().some((n) => n.id === id)) {
       setNotifications((ns) => ns.map((n) => (n.id === id ? notification : n)))
     } else {
-      console.log(
-        "New notification:",
-        notification.appName,
-        notification.summary,
-      )
-      setNotifications((ns) => [notification, ...ns])
+      setNotifications((ns) => [...ns, notification])
     }
   })
 
   const resolvedHandler = notifd.connect("resolved", (_, id) => {
-    console.log("Resolved notification:", id)
     setNotifications((ns) => ns.filter((n) => n.id !== id))
   })
 
