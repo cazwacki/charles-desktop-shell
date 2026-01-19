@@ -21,7 +21,7 @@ export default function Volume() {
 
   const popover = new Gtk.Popover()
   popover.child = (
-    <Gtk.Box orientation={1}>
+    <Gtk.Box orientation={Gtk.Orientation.VERTICAL}>
       <Gtk.Box>
         <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
         <Gtk.Label cssClasses={["title"]} label="input." />
