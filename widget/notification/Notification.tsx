@@ -44,10 +44,10 @@ export default function Notification({
         }, 1)
         setTimeout(() => {
           self.set_reveal_child(false)
-        }, 5000)
+        }, 8000)
         setTimeout(() => {
           n.dismiss()
-        }, 5250)
+        }, 8250)
       }}
       transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
       transitionDuration={250}
