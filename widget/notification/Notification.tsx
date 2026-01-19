@@ -37,95 +37,104 @@ export default function Notification({
   showActions?: boolean
 }) {
   return (
-    <Gtk.Box
-      name={n.id.toString()}
-      cssClasses={["notification-container", urgency(n)]}
-      $={() =>
-        GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 5, () => {
+    <Gtk.Revealer
+      $={(self) => {
+        setTimeout(() => {
+          self.set_reveal_child(true)
+        }, 1)
+        setTimeout(() => {
+          self.set_reveal_child(false)
+        }, 5000)
+        setTimeout(() => {
           n.dismiss()
-          return GLib.SOURCE_REMOVE
-        })
-      }
-      halign={Gtk.Align.END}
-      hexpand={false}
-      vexpand={true}
+        }, 5250)
+      }}
+      transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
+      transitionDuration={250}
     >
-      <Gtk.Box orientation={Gtk.Orientation.VERTICAL}>
-        <Gtk.Box vexpand hexpand cssClasses={["header"]}>
-          <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
-          <Gtk.Label
-            cssClasses={["title"]}
-            label={`${n.appName.toLowerCase() || "unknown"}. `}
-          />
-          <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
-        </Gtk.Box>
-        <Gtk.Box hexpand cssClasses={["content"]} spacing={8}>
-          {n.image && fileExists(n.image) && (
-            <Gtk.Box valign={Gtk.Align.START} cssClasses={["image"]}>
-              <overlay heightRequest={60} widthRequest={60}>
-                <Gtk.Picture
-                  $type="overlay"
-                  canShrink
-                  contentFit={Gtk.ContentFit.SCALE_DOWN}
-                  file={Gio.File.new_for_path(n.image)}
-                />
-              </overlay>
-            </Gtk.Box>
-          )}
-          {n.image && isIcon(n.image) && (
-            <Gtk.Box cssClasses={["icon-image"]} valign={Gtk.Align.START}>
-              <Gtk.Image
-                iconName={n.image}
-                iconSize={Gtk.IconSize.LARGE}
-                halign={Gtk.Align.CENTER}
-                valign={Gtk.Align.CENTER}
-              />
-            </Gtk.Box>
-          )}
-          <Gtk.Box hexpand orientation={Gtk.Orientation.VERTICAL}>
+      <Gtk.Box
+        name={n.id.toString()}
+        cssClasses={["notification-container", urgency(n)]}
+        halign={Gtk.Align.END}
+        hexpand={false}
+      >
+        <Gtk.Box orientation={Gtk.Orientation.VERTICAL}>
+          <Gtk.Box hexpand cssClasses={["header"]}>
+            <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
             <Gtk.Label
-              ellipsize={Pango.EllipsizeMode.END}
-              maxWidthChars={30}
-              cssClasses={["summary"]}
-              halign={Gtk.Align.START}
-              xalign={0}
-              label={n.summary}
+              cssClasses={["title"]}
+              label={`${n.appName.toLowerCase() || "unknown"}. `}
             />
-            {n.body && (
+            <Gtk.Separator hexpand valign={Gtk.Align.BASELINE_CENTER} />
+          </Gtk.Box>
+          <Gtk.Box hexpand cssClasses={["content"]} spacing={8}>
+            {n.image && fileExists(n.image) && (
+              <Gtk.Box valign={Gtk.Align.START} cssClasses={["image"]}>
+                <overlay heightRequest={60} widthRequest={60}>
+                  <Gtk.Picture
+                    $type="overlay"
+                    canShrink
+                    contentFit={Gtk.ContentFit.SCALE_DOWN}
+                    file={Gio.File.new_for_path(n.image)}
+                  />
+                </overlay>
+              </Gtk.Box>
+            )}
+            {n.image && isIcon(n.image) && (
+              <Gtk.Box cssClasses={["icon-image"]} valign={Gtk.Align.START}>
+                <Gtk.Image
+                  iconName={n.image}
+                  iconSize={Gtk.IconSize.LARGE}
+                  halign={Gtk.Align.CENTER}
+                  valign={Gtk.Align.CENTER}
+                />
+              </Gtk.Box>
+            )}
+            <Gtk.Box hexpand orientation={Gtk.Orientation.VERTICAL}>
               <Gtk.Label
-                maxWidthChars={30}
-                lines={3}
-                wrap
                 ellipsize={Pango.EllipsizeMode.END}
-                cssClasses={["body"]}
+                maxWidthChars={30}
+                cssClasses={["summary"]}
                 halign={Gtk.Align.START}
                 xalign={0}
-                label={n.body.replace(/\s+/g, " ")}
+                label={n.summary}
               />
-            )}
-          </Gtk.Box>
-        </Gtk.Box>
-        {showActions && (
-          <Gtk.Box
-            orientation={Gtk.Orientation.VERTICAL}
-            cssClasses={["actions"]}
-            spacing={6}
-          >
-            <Gtk.Button hexpand onClicked={() => n.dismiss()}>
-              <Gtk.Label label="dismiss." />
-            </Gtk.Button>
-            {n.get_actions().map(({ label, id }) => (
-              <Gtk.Button hexpand onClicked={() => n.invoke(id)}>
+              {n.body && (
                 <Gtk.Label
-                  label={`${label.toLowerCase()}.`}
-                  halign={Gtk.Align.CENTER}
-                  hexpand
+                  maxWidthChars={30}
+                  lines={3}
+                  wrap
+                  ellipsize={Pango.EllipsizeMode.END}
+                  cssClasses={["body"]}
+                  halign={Gtk.Align.START}
+                  xalign={0}
+                  label={n.body.replace(/\s+/g, " ")}
                 />
-              </Gtk.Button>
-            ))}
+              )}
+            </Gtk.Box>
           </Gtk.Box>
-        )}
+          {showActions && (
+            <Gtk.Box
+              // orientation={Gtk.Orientation.VERTICAL}
+              cssClasses={["actions"]}
+              spacing={6}
+            >
+              <Gtk.Button hexpand onClicked={() => n.dismiss()}>
+                <Gtk.Label label="dismiss." />
+              </Gtk.Button>
+              {n.get_actions().map(({ label, id }) => (
+                <Gtk.Button hexpand onClicked={() => n.invoke(id)}>
+                  <Gtk.Label
+                    label={`${label.toLowerCase()}.`}
+                    halign={Gtk.Align.CENTER}
+                    hexpand
+                  />
+                </Gtk.Button>
+              ))}
+            </Gtk.Box>
+          )}
+        </Gtk.Box>
       </Gtk.Box>
-    </Gtk.Box>
+    </Gtk.Revealer>
   )
 }
