@@ -9,8 +9,10 @@ function WorkspaceButton({ ws, symbol, label, ...props }: WsButtonProps) {
     const clients = createBinding(ws, "clients")
 
     if (focusedWorkspace().id === ws.id) {
+      console.log("active")
       return "active"
     } else if (clients().length > 0) {
+      console.log("occupied")
       return "occupied"
     } else {
       return ""
@@ -28,9 +30,21 @@ function WorkspaceButton({ ws, symbol, label, ...props }: WsButtonProps) {
             onClicked={() => ws.focus()}
             {...props}
           >
-            <Gtk.Box cssClasses={["workspace-button-Gtk.Box"]}>
+            <Gtk.Box cssClasses={["workspace-button-box"]}>
               <Gtk.Image iconName={symbol} />
-              <Gtk.Label label={label} />
+              <Gtk.Revealer
+                $={(self) => {
+                  if (value === "active") {
+                    setTimeout(() => {
+                      self.set_reveal_child(true)
+                    }, 1)
+                  }
+                }}
+                transitionDuration={250}
+                transitionType={Gtk.RevealerTransitionType.SLIDE_RIGHT}
+              >
+                <Gtk.Label label={label} />
+              </Gtk.Revealer>
             </Gtk.Box>
           </Gtk.Button>
         )}
