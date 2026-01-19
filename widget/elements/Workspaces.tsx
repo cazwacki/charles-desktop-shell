@@ -33,10 +33,15 @@ function WorkspaceButton({ ws, symbol, label, ...props }: WsButtonProps) {
             <Gtk.Box cssClasses={["workspace-button-box"]}>
               <Gtk.Image iconName={symbol} />
               <Gtk.Revealer
+                revealChild={value !== "active"}
                 $={(self) => {
                   if (value === "active") {
                     setTimeout(() => {
                       self.set_reveal_child(true)
+                    }, 1)
+                  } else {
+                    setTimeout(() => {
+                      self.set_reveal_child(false)
                     }, 1)
                   }
                 }}
