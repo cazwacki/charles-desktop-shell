@@ -19,9 +19,6 @@ function updateTheme() {
 // Listen for changes
 user_interface.connect('changed::color-scheme', updateTheme);
 
-// Initial theme update
-updateTheme();
-
 app.start({
   css: style_dark,
   // gtkTheme: "adw-gtk3-dark",
@@ -30,3 +27,6 @@ app.start({
     app.get_monitors().map(NotificationPopup)
   },
 })
+
+// Initial theme update
+updateTheme();
