@@ -54,7 +54,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       anchor={TOP | LEFT | RIGHT}
       application={app}
     >
-      <Gtk.CenterBox cssName="Gtk.CenterBox">
+      <Gtk.CenterBox cssName="centerbox">
         <Gtk.Box $type="start" spacing={8}>
           <Workspaces buttons={buttons} />
         </Gtk.Box>
