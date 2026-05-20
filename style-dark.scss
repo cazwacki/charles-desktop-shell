@@ -1,12 +1,12 @@
 // https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
-$fg-color: #c01818;
-$bg-color-dark: #100000;
-$bg-color: #301010;
-$bg-color-light: #801010;
-$bg-color-popover: #301010;
-$accent: #f03030;
-$text: #bbbbbb;
-$text-disabled: #444444;
+$fg-color: #79740e;
+$bg-color-dark: #1d2021;
+$bg-color: #282828;
+$bg-color-light: #3c3836;
+$bg-color-popover: #282828;
+$accent: #79740e;
+$text: #ebdbb2;
+$text-disabled: #7c6f64;
 
 * {
     font-family: 'figtree';
@@ -51,10 +51,6 @@ window.Bar {
         }
 
         background-color: $bg-color;
-
-        .workspace-button-box image {
-            padding-left: 3px;
-        }
 
     }
 

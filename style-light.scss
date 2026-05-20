@@ -3,7 +3,7 @@ $bg-color-dark: #ebdbb2;
 $bg-color: #fbf1c7;
 $bg-color-light: #f2e5bc;
 $bg-color-popover: #fbf1c7;
-$fg-color: #98971a;
+$fg-color: #b8bb26;
 $accent: #b8bb26;
 $text: #3c3836;
 $text-disabled: #7c6f64;
@@ -51,10 +51,6 @@ window.Bar {
         }
 
         background-color: $bg-color;
-
-        .workspace-button-box image {
-            padding-left: 3px;
-        }
 
     }
 
